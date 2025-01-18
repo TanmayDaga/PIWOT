@@ -5,15 +5,19 @@ import "./App.css";
 import { EthereumProvider } from "./lib/ContractContext";
 import React from "react";
 import Wrapper from "./components/Wrapper";
-
+import  CommunityDashboard from "./components/getComunity"
+import  UserProfilePage from "./components/userProfile"
+import { BrowserRouter, Routes , Route } from "react-router";
 function App() {
-  const [count, setCount] = useState(0);
+  return(
+    <BrowserRouter>
+    <Routes>
+      <Route  path = "/profile" element = {<UserProfilePage/>} />
+      <Route  path="/communities" element = {<CommunityDashboard/>}/>
+    </Routes>
+    </BrowserRouter>
+  )
 
-  return (
-    <EthereumProvider>
-      <Wrapper/>
-    </EthereumProvider>
-  );
 }
 
 export default App;
