@@ -8,7 +8,8 @@ import Wrapper from "./components/Wrapper";
 import  CommunityDashboard from "@/components/getComunitiy"
 import  UserProfilePage from "@/components/userProfile"
 import { BrowserRouter, Routes , Route } from "react-router";
-import LoginPage from "./components/Login";
+import LoginPage from "./components/Login"
+import CommunityFeed from './components/communityData'
 function App() {
   return(
     
@@ -17,7 +18,7 @@ function App() {
       <Route  path = "/profile" element = {<UserProfilePage/>} />
       <Route  path="/communities" element = {<CommunityDashboard/>}/>
       <Route path = "/login" element =  {<LoginPage/>}/>
-    
+      <Route path ="/feed" element = {<CommunityFeed/>}/>
 
     </Routes>
     </BrowserRouter>
