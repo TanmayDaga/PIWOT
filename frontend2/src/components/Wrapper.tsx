@@ -10,7 +10,7 @@ const Wrapper: React.FC<WrapperProps> =  () => {
     async function name() {
       try {
       
-        console.log(contract.runner)
+        console.log((await (await contract.getAllCommunities())[1]));
         
         
     

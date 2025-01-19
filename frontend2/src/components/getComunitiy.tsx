@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -17,44 +17,72 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Users, Plus, UserPlus } from 'lucide-react';
+import { Users, Plus, UserPlus } from "lucide-react";
+import { EthereumContext } from "@/lib/ContractContext";
+import { log } from "console";
 
 const CommunityDashboard = () => {
   // Sample data - replace with actual data from your backend
-  const [myCommunities, setMyCommunities] = useState([
-    { id: 1, name: 'Tech Enthusiasts', members: 234, description: 'A community for tech lovers' },
-    { id: 2, name: 'Book Club', members: 156, description: 'Discuss your favorite books' }
-  ]);
 
-  const [availableCommunities, setAvailableCommunities] = useState([
-    { id: 3, name: 'Fitness Group', members: 567, description: 'Share fitness tips and progress' },
-    { id: 4, name: 'Cooking Club', members: 890, description: 'Exchange recipes and cooking tips' }
-  ]);
+  const { contract, signer } = useContext(EthereumContext);
+const [allCommunities, setAllCommunities] = useState<{id:number, name:string, members:number}[]>([]);
+const [myCommunities, setMyCommunities] = useState<{id:number, date:number}[]>([]);
+const [newCommunity, setNewCommunity] = useState<{name:string}>({
+  name: "",
+});
+  useEffect(() => {
+    async function getCommunities() {
+      let communities = await contract.getAllCommunities();
+      let prod:{id:number, name:string, members:number}[] = []
 
-  const [newCommunity, setNewCommunity] = useState({
-    name: '',
-    description: ''
-  });
+   
+      
+      for (let i = 0; i < Object.keys(communities[0]).length; i++) {
+       prod.push({id:communities[0][i], name:communities[1][i], members:communities[3][i]})
+      }
+      setAllCommunities(prod); 
+
+      communities = await contract.getUserCommunities(await signer.getAddress());
+      let prod2:{id:number, date:number}[] = [];
+      console.log(communities[0]);
+      
+  
+      for (let i = 0; i < Object.keys(await communities[0]).length; i++) {
+       prod2.push({id:communities[0][i], date:communities[1][i]})
+      }
+      setMyCommunities(prod2);
+
+
+     console. log("All Communities", prod);
+      console.log("My Communities", prod2);
+    }
+
+    if (contract) {
+      getCommunities();
+    }
+  }, [contract]);
+
+
+
+ 
+
+
 
   const handleCreateCommunity = () => {
-    // Add logic to create community
-    console.log('Creating community:', newCommunity);
-    setNewCommunity({ name: '', description: '' });
+ 
+    contract.createCommunity(newCommunity.name);
   };
 
   const handleJoinCommunity = (communityId) => {
     // Add logic to join community
-    const communityToJoin = availableCommunities.find(c => c.id === communityId);
-    if (communityToJoin) {
-      setMyCommunities([...myCommunities, communityToJoin]);
-      setAvailableCommunities(availableCommunities.filter(c => c.id !== communityId));
-    }
+
+    contract.followCommunity(communityId);
   };
 
   return (
     <div className="p-6 space-y-6 max-w-6xl mx-auto">
       <h1 className="text-3xl font-bold mb-8">Community Dashboard</h1>
-      
+
       {/* My Communities Section */}
       <Card>
         <CardHeader>
@@ -62,19 +90,19 @@ const CommunityDashboard = () => {
             <Users className="h-6 w-6" />
             My Communities
           </CardTitle>
-          <CardDescription>Communities you're currently a member of</CardDescription>
+          <CardDescription>
+            Communities you're currently a member of
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid md:grid-cols-2 gap-4">
             {myCommunities.map((community) => (
               <Card key={community.id} className="bg-secondary/20">
                 <CardHeader>
-                  <CardTitle>{community.name}</CardTitle>
-                  <CardDescription>{community.members} members</CardDescription>
+                  <CardTitle>{allCommunities.filter((comm) => comm.id === community.id )[0].name}</CardTitle>
+                  <CardDescription>{allCommunities.filter((comm) => comm.id === community.id)[0].members.toString()} members</CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <p>{community.description}</p>
-                </CardContent>
+              
               </Card>
             ))}
           </div>
@@ -92,15 +120,15 @@ const CommunityDashboard = () => {
         </CardHeader>
         <CardContent>
           <div className="grid md:grid-cols-2 gap-4">
-            {availableCommunities.map((community) => (
+            {allCommunities.map((community) => (
               <Card key={community.id} className="bg-secondary/20">
                 <CardHeader>
                   <CardTitle>{community.name}</CardTitle>
-                  <CardDescription>{community.members} members</CardDescription>
+                  <CardDescription>{community.members.toString()} members</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="mb-4">{community.description}</p>
-                  <Button 
+              
+                  <Button
                     onClick={() => handleJoinCommunity(community.id)}
                     className="w-full"
                   >
@@ -141,30 +169,17 @@ const CommunityDashboard = () => {
                   </label>
                   <Input
                     value={newCommunity.name}
-                    onChange={(e) => setNewCommunity({
-                      ...newCommunity,
-                      name: e.target.value
-                    })}
+                    onChange={(e) =>
+                      setNewCommunity({
+                        ...newCommunity,
+                        name: e.target.value,
+                      })
+                    }
                     placeholder="Enter community name"
                   />
                 </div>
-                <div>
-                  <label className="text-sm font-medium mb-1 block">
-                    Description
-                  </label>
-                  <Textarea
-                    value={newCommunity.description}
-                    onChange={(e) => setNewCommunity({
-                      ...newCommunity,
-                      description: e.target.value
-                    })}
-                    placeholder="Describe your community"
-                  />
-                </div>
-                <Button 
-                  onClick={handleCreateCommunity}
-                  className="w-full"
-                >
+             
+                <Button onClick={handleCreateCommunity} className="w-full">
                   Create Community
                 </Button>
               </div>
