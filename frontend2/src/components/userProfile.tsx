@@ -16,6 +16,7 @@ import {
   Settings
 } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
+import Navbar from './navbar';
 
 // TypeScript interfaces
 interface UserProfile {
@@ -127,12 +128,14 @@ const UserProfilePage = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-6">
+    <div>
+        <Navbar/>
+        <div className="max-w-6xl mx-auto p-6 space-y-6">
       {/* Profile Header */}
       <div className="flex items-start justify-between">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 mt-4">
           <Avatar className="h-24 w-24">
-            <AvatarImage src={profile?.avatarUrl} />
+            <AvatarImage src="https://github.com/shadcn.png" />
             <AvatarFallback>{profile?.username.charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
           <div>
@@ -140,9 +143,6 @@ const UserProfilePage = () => {
             <p className="text-muted-foreground">Member since {new Date(profile?.joinDate || '').toLocaleDateString()}</p>
           </div>
         </div>
-        <Button variant="outline" size="icon">
-          <Settings className="h-4 w-4" />
-        </Button>
       </div>
 
       {/* Wallet Information */}
@@ -238,6 +238,7 @@ const UserProfilePage = () => {
           </div>
         </CardContent>
       </Card>
+    </div>
     </div>
   );
 };

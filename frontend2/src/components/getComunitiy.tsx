@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Users, Plus, UserPlus } from 'lucide-react';
+import Navbar from './navbar';
 
 const CommunityDashboard = () => {
   // Sample data - replace with actual data from your backend
@@ -52,7 +53,9 @@ const CommunityDashboard = () => {
   };
 
   return (
-    <div className="p-6 space-y-6 max-w-6xl mx-auto">
+    <div>
+      <Navbar/>
+      <div className="p-6 space-y-6 max-w-6xl mx-auto">
       <h1 className="text-3xl font-bold mb-8">Community Dashboard</h1>
       
       {/* My Communities Section */}
@@ -172,6 +175,7 @@ const CommunityDashboard = () => {
           </Dialog>
         </CardContent>
       </Card>
+    </div>
     </div>
   );
 };
