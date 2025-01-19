@@ -52,7 +52,7 @@ export const LoginForm = ({
             </form>
             <div className="relative hidden bg-gray-100 md:block">
                 <img
-                src=""
+                src="/cover.jpg"
                 alt="Login decoration"
                 className="absolute inset-0 h-full pl-10 object-cover dark:brightness-[0.2] dark:grayscale"
                 />

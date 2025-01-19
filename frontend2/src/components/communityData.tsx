@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import Navbar from './navbar';
 import { Plus, MessageSquare, BarChart } from 'lucide-react';
 
 // Types
@@ -87,7 +88,9 @@ const CommunityFeed = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 max-w-4xl">
+    <div>
+        <Navbar/>
+        <div className="container mx-auto p-4 max-w-4xl mt-16">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Community Feed</h1>
         <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
@@ -150,6 +153,7 @@ const CommunityFeed = () => {
             );
           })}
       </div>
+    </div>
     </div>
   );
 };
